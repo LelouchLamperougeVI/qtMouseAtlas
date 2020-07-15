@@ -82,6 +82,34 @@ class structTree():
             lvl_nodes = self.list_nodes(l)
             for k in [k for key_lvl, k in zip(levels, keys) if key_lvl == l+shift]:
                 [n.insert(names[k], k) for n in lvl_nodes if n.val in ids[k]]
+                
+    def get_node_by_name(self, name, node=None):
+        if not node:
+            node = self.root
+        matches = list()
+        if node.name in name:
+            matches.append(node)
+        for c in node.children:
+            matches += self.get_node_by_name(name, c)
+        return matches
+    
+    def get_node_by_id(self, ids, node=None):
+        if not node:
+            node = self.root
+        matches = list()
+        if node.val in ids:
+            matches.append(node)
+        for c in node.children:
+            matches += self.get_node_by_id(ids, c)
+        return matches
+                
+    def list_descendent_ids(self, node): #list all descendents of given node
+        if not node:
+            return list()
+        nodes = [c.val for c in node.children]
+        for c in node.children:
+            nodes += self.list_descendent_ids(c)
+        return nodes
         
     def list_nodes(self, lvl, node=None): #list nodes at tree level
         if not lvl:
